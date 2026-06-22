@@ -9,32 +9,20 @@ public class playermovement : MonoBehaviour
     public bool isGrounded;
     public bool left;
     public float jumpforce = 5f;
-
+    public float playerinput;
+    public float playerfloattime = 3f;
+    //I guess I want to manage the time taken for the player to move with coroutine,so I will implement travel time and transform for it to work in a 2d Environment
 
     void Start()
     {
-        StartCoroutine(movement());
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    IEnumerator movement()
-    {
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Translate(Vector3.right * speed * Time.deltaTime);
-            left = false;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Translate(Vector3.left * speed * Time.deltaTime);
-            left = true;
-        }
 
     }
+
+ 
 }
