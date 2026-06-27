@@ -20,9 +20,21 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         StartCoroutine(MoveLeftAndRight());
+        StartCoroutine(Jump());
     }
-
-
+    IEnumerator Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isgrounded == true)
+        {
+            rb.AddForce(Vector2.up * 10, ForceMode2D.Impulse);
+            isgrounded = false;
+        }
+        else if (Input.GetKeyDown(KeyCode.Space) && isgrounded == false)
+        {
+            yield return null;
+        }
+        yield return new WaitForSeconds(1.0f);
+    }
     IEnumerator MoveLeftAndRight()
     {
         if (Input.GetKey(KeyCode.A))
