@@ -27,9 +27,5 @@ public class Platform : MonoBehaviour
         {
             isgrounded.isgrounded = true;
         }
-        else
-        {
-            isgrounded.isgrounded = false;
-        }
     }
 }
