@@ -15,8 +15,10 @@ public class PlayerController : MonoBehaviour
     public float speed = 5.0f;
     public bool right;
     public float jumpforce = 10.0f;
-    [Header("Gravity")]
-    public bool isgrounded = true;
+    [Header("Collision Detection")]
+    [SerializeField] private float groundcheckdistance;
+    public bool isgrounded;
+    [SerializeField]private LayerMask ground;
     [Header("Dash")]
     public float dashspeed = 10.0f;
     [SerializeField]public float dashduration = 0.5f;
@@ -35,6 +37,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        HandleCollision();
         MovingLeftOrRight();
         Jump();
         ToDash();
@@ -84,6 +87,11 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(dashduration);
         candash = true;
 
+    }
+    //Collision Detection
+     private void HandleCollision()
+    {
+        isgrounded = Physics2D.Raycast(transform.position, Vector2.down, groundcheckdistance, ground);
     }
 
 }
