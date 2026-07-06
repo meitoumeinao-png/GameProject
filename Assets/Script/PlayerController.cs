@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
     public float speed = 5.0f;
     public bool right;
     [Header("Jump")]
-    private bool isjumping = false;
-    public float jumpforce = 2.0f;
+    private bool isjumping;
     private float secondspassed;
     private float maxseconds = 5.0f;
     private float maxjumpforce = 10.0f;
@@ -82,20 +81,25 @@ public class PlayerController : MonoBehaviour
     //I will make it so that as long as they hold down the spacebar, time will build up and by then.it will be seconds/max second * maxjumpforce
     void Jump()
     {
-        if(Input.GetKey(KeyCode.Space) && isgrounded == true)
+        if(isgrounded == true && Input.GetKeyDown(KeyCode.Space))
         {
+            secondspassed = 0f;
             isjumping = true;
-            rb.linearVelocity = new Vector2(rb.linearVelocityX,jumpforce);
+            Debug.Log("E");
         }
-        while (isgrounded == true && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
-            secondspassed =+ Time.fixedDeltaTime;
+            secondspassed += Time.deltaTime;
+            Debug.Log("w");
         }
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Space) && isjumping )
         {
+            float jumpforce = (secondspassed / maxseconds) * maxjumpforce;
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, jumpforce);
             isjumping = false;
-            rb.linearVelocity = new Vector2(rb.linearVelocityX,(secondspassed/maxseconds)*maxjumpforce);
+            Debug.Log("q");
         }
+
     }
         //Used CoRountine as this feature will have a cooldown
         void ToDash()
