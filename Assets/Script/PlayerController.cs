@@ -18,6 +18,9 @@ public class PlayerController : MonoBehaviour
     public float speed = 5.0f;
     public bool right;
     public float jumpforce = 10.0f;
+    private float jumptimecounter;
+    private float maxjumpforce;
+    private float duration = 10.0f;
     [Header("Collision Detection")]
     [SerializeField] private float groundcheckdistance;
     public bool isgrounded;
@@ -51,7 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         HandleCollision();
         MovingLeftOrRight();
-        Jump();
+        StartCoroutine(SuperJump());
         ToDash();
     }
 
@@ -130,5 +133,23 @@ public class PlayerController : MonoBehaviour
             transform.eulerAngles = new Vector3(0f, 0f, 0f);
         }
     }
+    //When I jump the object does not move;Capsule Collision Issue;
+    IEnumerator SuperJump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && isgrounded)
+        {
+            isgrounded = false;
+            float time =+ Time.deltaTime;
+            jumptimecounter = time;
+            yield return new WaitForSecondsRealtime(duration);
+        }
+        else if (Input.GetKeyUp(KeyCode.Space))
+        {
+            Debug.Log("Jump");
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x,jumpforce * jumptimecounter);
+            jumptimecounter = 0;
+            yield return null;
+        }
 
+    }
 }
