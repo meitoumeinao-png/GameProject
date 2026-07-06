@@ -6,7 +6,7 @@ public class Platform : MonoBehaviour
     [SerializeField]
     private Rigidbody2D rb;
     private BoxCollider2D boxCollider;
-    public PlayerController isgrounded;
+    public PlayerController player;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,11 +21,11 @@ public class Platform : MonoBehaviour
         
     }
 
-     private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("player"))
-        {
-            isgrounded.isgrounded = true;
-        }
-    }
+    // private void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("player"))
+    //    {
+    //        player.isgrounded = true;
+    //    }
+    //}
 }

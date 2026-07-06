@@ -1,5 +1,8 @@
 using System;
 using System.Collections;
+using System.Net;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEditor.U2D.Aseprite;
 using UnityEngine;
@@ -20,18 +23,27 @@ public class PlayerController : MonoBehaviour
     public bool isgrounded;
     [SerializeField]private LayerMask ground;
     [Header("Dash")]
-    public float dashspeed = 10.0f;
+    public float dashspeed = 50.0f;
     [SerializeField]public float dashduration = 0.5f;
     private float dashtimer;
     private float maxdashtime;
     private bool isdashing;
     private bool candash = true;
-    private float dashcooldown = 2.0f;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         maxdashtime = dashduration;
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Platform"))
+        {
+            isgrounded = true;
+        }
     }
 
     // Update is called once per frame
@@ -56,12 +68,14 @@ public class PlayerController : MonoBehaviour
     void MovingLeftOrRight()
     {
         float moveinput = Input.GetAxis("Horizontal");
+        Flip(moveinput);
         rb.linearVelocity = new Vector2((speed * moveinput), rb.linearVelocityY);
     }
     void Jump()
     {
         if (Input.GetKeyDown(KeyCode.Space) && isgrounded == true )
         {
+            Debug.Log("Jump");
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpforce);
             isgrounded = false;
         }
@@ -74,8 +88,16 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(Dash());
         }
     }
+    //I dont really like how the player can have multiple airdash with this code,depending if the duration is shortened
+    // DO STATE THIS IN LATER COMMIT.
     IEnumerator Dash()
     {
+        Debug.Log("CanDash");
+        dashtimer += Time.deltaTime;
+        if (dashtimer <= maxdashtime)
+        {
+            yield return null;
+        }
         candash = false;
         isdashing = true;
         float originalGravity = rb.gravityScale;
@@ -86,12 +108,27 @@ public class PlayerController : MonoBehaviour
         isdashing = false;
         yield return new WaitForSeconds(dashduration);
         candash = true;
+        dashtimer = 0f;
 
     }
     //Collision Detection
-     private void HandleCollision()
+    private void HandleCollision()
     {
         isgrounded = Physics2D.Raycast(transform.position, Vector2.down, groundcheckdistance, ground);
+    }
+
+    //Flip 
+    void Flip(float moveinput)
+    {
+        if (moveinput > 0)
+        {
+            transform.eulerAngles = new Vector3(0f, 180f, 0f);
+        }
+
+        else
+        {
+            transform.eulerAngles = new Vector3(0f, 0f, 0f);
+        }
     }
 
 }
