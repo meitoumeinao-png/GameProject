@@ -22,8 +22,9 @@ public class PlayerController : MonoBehaviour
     private float secondspassed;
     private float maxseconds = 5.0f;
     private float maxjumpforce = 10.0f;
+    private float jump = 5.0f;
+    private float jumpduration = 1.5f;
     [Header("Collision Detection")]
-    private float groundcheckdistance = 3.0f;
     public bool isgrounded;
     [SerializeField]private LayerMask ground;
     [Header("Dash")]
@@ -53,10 +54,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 forward = transform.TransformDirection(Vector3.forward) * 10;
-        Debug.DrawRay(transform.position, Vector2.down*groundcheckdistance, Color.green);
         MovingLeftOrRight();
-        Jump();
+        SuperJump();
         ToDash();
     }
 
@@ -79,25 +78,31 @@ public class PlayerController : MonoBehaviour
  
     //I want to have a charging mechanic to increase jumpforce proportional to time while they charge,but i dont want them to jump out of frame.So I guess
     //I will make it so that as long as they hold down the spacebar, time will build up and by then.it will be seconds/max second * maxjumpforce
-    void Jump()
+    //Should do it when you use hold it down for a certain time,its start super jump by 1.5s.If not,jump.Seconds Should be a var in the if statement
+    void SuperJump()
     {
-        if(isgrounded == true && Input.GetKeyDown(KeyCode.Space))
-        {
+        if (Input.GetKeyDown(KeyCode.Space) && isgrounded == true){
             secondspassed = 0f;
             isjumping = true;
-            Debug.Log("E");
+            Debug.Log("charging");
         }
         if (Input.GetKey(KeyCode.Space))
         {
             secondspassed += Time.deltaTime;
-            Debug.Log("w");
+            Debug.Log("starting");
+        }
+        else if(Input.GetKeyUp(KeyCode.Space) && secondspassed < jumpduration)
+        {
+            Debug.Log("Jumped");
+            isjumping = false;
+            rb.linearVelocity = new Vector2(rb.linearVelocityX, jump);
         }
         if (Input.GetKeyUp(KeyCode.Space) && isjumping )
         {
             float jumpforce = (secondspassed / maxseconds) * maxjumpforce;
             rb.linearVelocity = new Vector2(rb.linearVelocityX, jumpforce);
             isjumping = false;
-            Debug.Log("q");
+            Debug.Log("Super Jump");
         }
 
     }
@@ -153,6 +158,7 @@ public class PlayerController : MonoBehaviour
         ///{
            /// Debug.Log("Yes");
         ///}
+        
     }
 
 }
