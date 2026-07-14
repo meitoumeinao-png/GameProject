@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class MainCamera : MonoBehaviour
 {
-    private float player_position;
-    private float camera_speed;
+    public Vector3 pos;
+    public Transform player;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -11,8 +12,8 @@ public class MainCamera : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        
+        transform.position = player.position + pos;
     }
 }

@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private bool isdashing;
     private bool candash = true;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
